@@ -1,0 +1,38 @@
+[initialize]
+
+$status= 1
+$token ="token"
+
+
+[post json data]
+
+>> POST /post token=$token
+
+
+json << {
+    deviceStatus: [
+        {
+            deviceId: 133
+            status: $status
+            content: @{resoure("file.txt")}
+         },
+         {
+            deviceId: 134
+            status: $status
+         }
+    ],
+}
+
+
+json {
+    json {
+
+    deviceStatus: [
+            {
+               deviceId: 133
+                deviceId != 134
+                deviceId > 132
+            }
+        ]
+    }
+}

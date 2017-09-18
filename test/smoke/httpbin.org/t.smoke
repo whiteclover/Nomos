@@ -1,0 +1,77 @@
+[initialize]
+$page=10
+$size = 12
+$key=hello
+$content="content"
+$host=httpbin.org
+
+
+
+[get]
+
+>> GET /get
+
+params {
+    page=$page
+    size=$size
+    key=$key
+    content=$content
+}
+
+content =~ /page/i
+code : 200
+code > 100
+
+[post]
+
+>> POST /post
+
+data {
+    page=$page
+    size=$size
+    key=$key
+    content=$content
+}
+
+
+content =~ /page/i
+code : 200
+code > 100
+
+
+
+
+[head]
+
+
+>> GET /headers
+
+code : 200
+code > 100
+
+
+content_type: application/json
+
+
+head << {
+    
+    connection: keep-alive
+    host: httpbin.org
+}
+
+head {
+    
+    connection: keep-alive
+    connection != null
+    host: null
+    Server =~ /Meinheld/i
+}
+
+
+json {
+    headers != null
+    headers {
+        Host : $host
+        Accept-Encoding: "gzip, deflate"
+    } 
+}
