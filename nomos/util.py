@@ -22,7 +22,6 @@ import codecs
 def resource(filename, binary=False, encoding="utf-8", b64=False):
     """Return file cotnent
 
-    [description]
     :param filename: file path 
     :type filename:str
     :param binary: open file mode, defaults to "rb" if is bianry else "r" 

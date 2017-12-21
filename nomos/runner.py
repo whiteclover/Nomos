@@ -29,7 +29,7 @@ from .util import resource
 
 
 class NomosRunner(object):
-    """Nomas test case runner
+    """Nomos test case runner
 
     :param url: prefix url for the new :class:`HttpSession` object.
     :param paths: the nomos dsl test  case directory list or file path.
