@@ -61,6 +61,7 @@ class WebTestCase(TestCase):
         self.assertRule(response.content, assetType, value)
 
     def assertJson(self, json, jsonAssertNode):
+        self.assertIsNotNone(json)
         key = jsonAssertNode.key.value
         if isinstance(jsonAssertNode.value, nodes.ValueNode):
             data = json[key]
@@ -74,10 +75,11 @@ class WebTestCase(TestCase):
                 for node in jsonAssertNode.value:
                     data = subnode[idx]
                     if isinstance(node, nodes.ValueNode):
-                        self.assertRule(data, ":", node.value)
+                        self.assertRule(data,  ":", node.value)
+                        idx += 1
                     else:
                         self.assertJson(data, node)
-                    idx += 1
+
             else:
                 for node in jsonAssertNode.value:
                     self.assertJson(json[key], node)

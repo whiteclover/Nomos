@@ -67,11 +67,3 @@ head {
     Server =~ /Meinheld/i
 }
 
-
-json {
-    headers != null
-    headers {
-        Host : $host
-        Accept-Encoding: "gzip, deflate"
-    } 
-}

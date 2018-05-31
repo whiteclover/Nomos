@@ -557,7 +557,7 @@ class NomosTokenizer(Tokenizer):
         """Pull the quoted key"""
         start = self.index
         sb = ''
-        self.take(3)
+        self.takeOne()
         while (not self.eof) and (not self.match("\"")):
             if self.match("\\"):
                 sb += self.pullEscapeSequence()

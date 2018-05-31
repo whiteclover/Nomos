@@ -49,13 +49,14 @@ class NomosRunner(object):
                  other wise a list of minix path to load test case minix.
     """
 
-    def __init__(self, url, paths, debug=None, timeout=5, verify=True, cert=None, minixs=None):
+    def __init__(self, url, paths, debug=None, timeout=5, verify=True, cert=None, minixs=None, **params):
         self.paths = paths
         self.url = url
         self.debug = debug
         self.timeout = timeout
         self.verify = verify
         self.cert = cert
+        self.params = params
         if minixs:
             self.minixs = self.getMinixClasses(None, minixs)
         else:
@@ -66,6 +67,7 @@ class NomosRunner(object):
         client = HttpSession(self.url, timeout=self.timeout, verify=self.verify, cert=self.cert)
         return {
             '_session': client,
+            "_params": self.params,
             'resource': resource,
             'WebTestCase': WebTestCase,
             "_n": nodes
@@ -142,7 +144,7 @@ class NomosRunner(object):
 
     def genTestClassFromFile(self, path, filename):
         """Generate test case class from file resource"""
-        if not filename.endswith(".smoke"):
+        if not filename.endswith(".ns"):
             return
 
         name, ext = filename.split('.', 1)

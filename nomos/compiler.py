@@ -66,6 +66,7 @@ class NomasComplirer(object):
         self.puts('def setUpClass(cls):', indent)
         self.puts('cls.initialize()', indent + 1)
         self.puts('cls.session=_session', indent + 1)
+        self.puts("cls.params = _params", indent + 1)
 
     def complieMethod(self, node, indent=0):
         """Write method section"""
