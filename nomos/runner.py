@@ -85,7 +85,7 @@ class NomosRunner(object):
                         testClass = self.genTestClassFromFile(path, f)
                         if testClass:
                             # extends minix classess
-                            if minixs:
+                            if minixs or self.minixs:
                                 classes = self.minixs + minixs + self.getClassBases(testClass)
                                 testClass = type(testClass.__name__, tuple(classes), dict(testClass.__dict__))
                             testClassesToRun.append(testClass)
@@ -95,6 +95,7 @@ class NomosRunner(object):
                 if testClass:
                     if self.minixs:
                         classes = self.minixs + self.getClassBases(testClass)
+
                         testClass = type(testClass.__name__, tuple(classes), dict(testClass.__dict__))
                     testClassesToRun.append(testClass)
 
@@ -148,7 +149,7 @@ class NomosRunner(object):
             return
 
         name, ext = filename.split('.', 1)
-        if ext == 'smoke':
+        if ext == 'ns':
             code, class_name = self.genTestcase(path, filename)
             ns = self.defaultNamespace()
 
