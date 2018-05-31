@@ -12,7 +12,7 @@ Install nomos
 ===================
 
 
-Requires python 2.7 version.
+Requires python 2.7+ version.
 
 You can install nomos with a single command using pip, type this into your terminal:
 
@@ -31,7 +31,7 @@ Develop mode, git clone the project, then move to the proejct directory, type th
 Creating a nomos test
 =====================================
 
-Writing code in file named ``test.smoke``.
+Writing code in file named ``test.ns``.
 
 
 .. code-block:: txt
@@ -87,4 +87,4 @@ Type this into your terminal for running the test:
 
 .. code-block:: bash
     
-    python - m nomos    -url=http://httpbin.org   test.smoke
+    python - m nomos    -url=http://httpbin.org   test.ns
