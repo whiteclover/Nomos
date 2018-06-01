@@ -13,6 +13,7 @@ class Nomoser(object):
         _('-u', '--url', default='http://localhost', help='The host of the http server url prefix (default %(default)r)')
         _('-d', '--debug', help='Open debug mode (default %(default)r)', action='store_true', default=False)
         _('-p', '--path', help='The test  nomos path (default %(default)r)', default="")
+        _('-r', '--resource', help='The test  nomos resource path (default %(default)r)', default=None)
         _('-m', '--minix', help='The test  minix path list (default %(default)r)', default=[])
         _('-c', '--config', default=self.conf_path, help="config path (default %(default)r)", metavar="FILE")
         _("-v", "--version", help="Show nomos version 0.1")

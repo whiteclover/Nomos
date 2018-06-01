@@ -17,9 +17,11 @@
 
 import base64
 import codecs
+from .globalvar import config
+import os.path
 
 
-def resource(filename, binary=False, encoding="utf-8", b64=False):
+def resource(filename, binary=False, encoding="utf-8", b64=False, useConfig=True):
     """Return file cotnent
 
     :param filename: file path 
@@ -33,6 +35,11 @@ def resource(filename, binary=False, encoding="utf-8", b64=False):
     :returns: the file content
     :rtype: str|bytes
     """
+
+    if useConfig:
+        path = config.get("resource")
+        if path:
+            filename = os.path.join(path, filename)
 
     mode = "rb" if binary else "r"
     if binary:
