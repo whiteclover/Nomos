@@ -22,6 +22,8 @@ from .parser import NomosTokenizer
 from .parser import TokenType
 from .util import resource
 
+from .config import SelectConfig
+
 
 class DslParser(object):
     """Dsl parser"""
@@ -63,13 +65,8 @@ class DslParser(object):
     """import regex expression"""
 
     def __init__(self, path, filename):
-
-        filepath = os.path.join(path, filename)
-        name = filename.split('.', 1)[0]
-        className = self._className(name)
-        self.node = nodes.HttpTestCalssNode(className, filepath)
-        text = resource(filepath)
-        self.reader = NomosTokenizer(text)
+        self.filename = filename
+        self.path = path
         self._diagnosticStack = []
 
     def _className(self, name):
@@ -90,9 +87,68 @@ class DslParser(object):
         current_path = "".join(self._diagnosticStack)
         return str.format("Current path: {0}", current_path)
 
-    def build(self):
-        """Build test case rule from nomos dsl language"""
-        methods = self.node.methods
+    def buildConfig(self):
+        """build  select config"""
+        nodes = []
+        filepath = os.path.join(self.path, self.filename)
+        text = resource(filepath)
+        self.reader = NomosTokenizer(text, True)
+        self.parseObject(nodes)
+        root = dict()
+        self.convertToDict(root, nodes)
+        pyconfig = SelectConfig(root)
+        return pyconfig
+
+    def convertToDict(self, root, nodes):
+        """convert to dict
+        :param root: root config node
+        :type root: dict
+        :param nodes: node list
+        :type nodes: list
+        """
+        for node in nodes:
+            if node['type'] == 'object':
+                subnode = dict()
+                root[node['key']] = subnode
+                self.convertToDict(subnode, node['value'])
+            elif node['type'] == 'text':
+                root[node['key']] = node['value']
+            elif node['type'] == 'array':
+                self.convertToArray(root,  node)
+
+    def convertToArray(self, root, node):
+        """convert to array
+        :param root: root config node
+        :type root: dict|list
+        :param nodes: node list
+        :type nodes: list
+        """
+        subnode = []
+        if isinstance(root, dict):
+            root[node['key']] = subnode
+        else:
+            root.append(subnode)
+        for item in node['value']:
+            if item['type'] == 'text':
+                subnode.append(item['value'])
+            elif item['type'] == 'object':
+                vnode = dict()
+                self.convertToDict(vnode, item['value'])
+                subnode.append(vnode)
+            elif item['type'] == 'array':
+                vnode = []
+                subnode.append(vnode)
+                self.convertToArray(vnode, item)
+
+    def buildNomos(self):
+        """Build  test case rule from nomos dsl language"""
+        filepath = os.path.join(self.path, self.filename)
+        text = resource(filepath)
+        self.reader = NomosTokenizer(text)
+        name = self.filename.split('.', 1)[0]
+        className = self._className(name)
+        root = nodes.HttpTestCalssNode(className, filepath)
+        methods = root.methods
 
         try:
             node = None
@@ -125,7 +181,7 @@ class DslParser(object):
                     for line in imports.split("\n"):
                         line = line.strip()
                         if self.IMPOER_REGEX.match(line) or self.FROM_IMPOER_REGEX.match(line):
-                            self.node.imports.append(line)
+                            root.imports.append(line)
 
                 if t.tokenType == TokenType.Key:
                     key = t.value
@@ -143,10 +199,11 @@ class DslParser(object):
                     node['value'] = self.parseArray()
 
                 elif t.tokenType == TokenType.ObjectEnd:
-                    return
+                    break
         finally:
             self.buildMethod(currentMethod, node, paramsNode)
             self.popDiagnostics()
+        return root
 
     def buildMethod(self, currentMethod, node, paramsNode):
         """Build method dsl tree"""

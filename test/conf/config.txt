@@ -1,0 +1,38 @@
+###########################
+###   Test config    ###
+###########################
+
+## http server setting
+server {
+    host = "localhost"
+    port = 8880
+}
+
+db {
+    passwd = "euterpe"
+    user = "euterpe"
+    host = "localhost"
+    db = "euterpe"
+}
+
+redis {
+    host = "localhost"
+    port = 6379
+}
+
+arr = [1,6,"fffff"]
+
+debug = on
+
+## the static resource setting
+//asset {
+//  url_prefix = "/assets/" // asset url path prefix
+//  path  = "./nodejs/dist/assets" # static files path
+//}
+
+
+## choco template settings
+choco {
+    cache_path = "./cache" # choco module cache  path, comments it if wanna  disable 
+    filesystem_checks = on 
+}

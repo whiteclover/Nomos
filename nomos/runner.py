@@ -26,6 +26,7 @@ from .dsl import DslParser
 from .http import HttpSession
 from .testcase import WebTestCase
 from .util import resource
+from .globalvar import config
 
 
 class NomosRunner(object):
@@ -47,6 +48,8 @@ class NomosRunner(object):
                     If Tuple, ('cert', 'key') pair.
     :param minixs: (optional) if Classes list, the test case minixes to inherit.
                  other wise a list of minix path to load test case minix.
+
+
     """
 
     def __init__(self, url, paths, debug=None, timeout=5, verify=True, cert=None, minixs=None, **params):
@@ -70,7 +73,8 @@ class NomosRunner(object):
             "_params": self.params,
             'resource': resource,
             'WebTestCase': WebTestCase,
-            "_n": nodes
+            "_n": nodes,
+            "config": config
         }
 
     def run(self):
@@ -160,9 +164,7 @@ class NomosRunner(object):
     def genTestcase(self, path, filename):
         """Generate test case class  code"""
         dslParser = DslParser(path, filename)
-        dslParser.build()
+        node = dslParser.buildNomos()
         compiler = NomasComplirer()
-        dsl = dslParser.node
-        compiler.complie(dslParser.node)
-        print(compiler.code)
-        return compiler.code, dsl.name
+        compiler.complie(node)
+        return compiler.code, node.name

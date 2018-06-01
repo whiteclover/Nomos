@@ -670,7 +670,7 @@ class NomosTokenizer(Tokenizer):
 
     FLOAT_VAR = re.compile(r'^-?\d+\.\d+$')
     INT_VAR = re.compile(r'^-?\d+$')
-    BOOL_VAR = {'true': True, 'false': False, 'on': True, 'off': False}
+    BOOL_VAR = {'true': True, 'false': False, 'on': True, 'off': False, "yes": True, "no": False}
 
     def convertToPyValue(self, value):
         """Convet to python value"""
